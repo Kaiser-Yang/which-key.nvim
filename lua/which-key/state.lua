@@ -29,6 +29,10 @@ function M.safe(mode_change)
     return false, "macro"
   elseif mode_change:lower() == "v:v" then
     return false, "visual-block"
+  -- Don't activate in insert-normal mode (triggered by <C-o> in insert mode)
+  -- These modes start with "ni" and are meant for single normal-mode commands
+  elseif mode_change:match(":ni") then
+    return false, "insert-normal-mode"
   end
   local pending = vim.fn.getcharstr(1)
   if pending ~= "" then

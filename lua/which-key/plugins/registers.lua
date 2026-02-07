@@ -43,6 +43,12 @@ function M.expand()
   local is_osc52 = vim.g.clipboard and vim.g.clipboard.name == "OSC 52"
   local has_clipboard = vim.g.loaded_clipboard_provider == 2
 
+  local Config = require("which-key.config")
+  local format_fn = nil
+  if type(Config.plugins.registers) == "table" and type(Config.plugins.registers.format) == "function" then
+    format_fn = Config.plugins.registers.format
+  end
+
   for i = 1, #M.registers, 1 do
     local key = M.registers:sub(i, i)
     local value = ""
@@ -56,6 +62,10 @@ function M.expand()
       value = vim.fn.keytrans(value) --[[@as string]]
       for k, v in pairs(M.replace) do
         value = value:gsub(k, v) --[[@as string]]
+      end
+      -- Apply format function if configured
+      if format_fn then
+        value = format_fn(value)
       end
       table.insert(items, { key = key, desc = labels[key] or "", value = value })
     end
