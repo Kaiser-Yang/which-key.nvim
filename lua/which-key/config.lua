@@ -43,9 +43,10 @@ local defaults = {
       enabled = true, -- shows your registers on " in NORMAL or <C-r> in INSERT mode
       -- Format function for register values. Accepts a string and returns a formatted string.
       -- Useful for truncating long register contents to prevent UI freezing.
+      -- The default truncates at 100 characters to balance readability and performance.
       ---@type fun(value: string): string
       format = function(value)
-        local max_len = 100
+        local max_len = 100 -- Truncate after 100 characters to prevent UI freezing
         if #value > max_len then
           return value:sub(1, max_len) .. "…"
         end
